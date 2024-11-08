@@ -1,0 +1,7 @@
+[project]
+name = "dj-tutorial"
+version = "0.1.0"
+description = "Project based on Django tutorial"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
