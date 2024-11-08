@@ -1,3 +1,5 @@
+default: fmt fix
+
 # Project management commands
 project := "project"
 
@@ -9,3 +11,13 @@ shell:
 
 serve:
     cd ./{{project}} && uv run manage.py runserver
+
+# Code quality commands
+fmt:
+    ruff format
+
+lint:
+    ruff check
+
+fix:
+    ruff check --fix
