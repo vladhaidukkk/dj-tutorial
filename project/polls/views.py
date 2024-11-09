@@ -1,13 +1,14 @@
 from django.http import HttpResponse
+from django.template import loader
 
 from .models import Question
 
 
 def index(request):
     latest_questions = Question.objects.order_by("-pub_date")[:5]
-    # Output formatting code is directly in the view function.
-    content = ", ".join(q.question_text for q in latest_questions)
-    return HttpResponse(content)
+    template = loader.get_template("polls/index.html")
+    context = {"latest_questions": latest_questions}
+    return HttpResponse(template.render(context, request))
 
 
 def detail(request, question_id):
