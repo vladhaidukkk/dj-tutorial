@@ -6,7 +6,7 @@ class Question(models.Model):
     pub_date = models.DateTimeField("date published")
 
     def __str__(self):
-        return f"Question id={self.id!r} text={self.question_text!r} pub_date={self.pub_date!r}"
+        return self.question_text
 
 
 class Choice(models.Model):
@@ -15,4 +15,4 @@ class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Choice id={self.id!r} text={self.choice_text!r} votes={self.votes!r}"
+        return self.choice_text

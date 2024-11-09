@@ -27,6 +27,9 @@ show-sql app name:
 migrate:
     cd ./{{project}} && uv run manage.py migrate
 
+create-superuser:
+    cd ./{{project}} && uv run manage.py createsuperuser
+
 # Code quality commands
 fmt:
     ruff format
