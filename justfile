@@ -27,6 +27,9 @@ show-sql app name:
 migrate:
     cd ./{{project}} && uv run manage.py migrate
 
+test app:
+    cd ./{{project}} && uv run manage.py test {{app}}
+
 create-superuser:
     cd ./{{project}} && uv run manage.py createsuperuser
 
