@@ -20,6 +20,11 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+
 # SQLite files
 *.sqlite
 *.sqlite3
