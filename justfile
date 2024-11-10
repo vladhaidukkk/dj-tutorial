@@ -29,12 +29,15 @@ migrate app="":
 # Code quality commands
 fmt:
     uv run ruff format
+    uv run djlint ./{{project}} --reformat
 
 check-fmt:
     uv run ruff format --check
+    uv run djlint ./{{project}} --check
 
 lint:
     uv run ruff check
+    uv run djlint ./{{project}} --lint
 
 fix:
     uv run ruff check --fix
