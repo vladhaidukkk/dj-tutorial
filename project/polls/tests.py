@@ -18,13 +18,13 @@ class QuestionModelTests(TestCase):
         recent_question = Question(pub_date=date)
         self.assertTrue(recent_question.was_published_recently())
 
-    def test_was_recently_published_with_old_question_returns_false(self):
+    def test_was_recently_published_with_past_question_returns_false(self):
         date = timezone.now() - dt.timedelta(days=1, seconds=1)
-        old_question = Question(pub_date=date)
-        self.assertFalse(old_question.was_published_recently())
+        past_question = Question(pub_date=date)
+        self.assertFalse(past_question.was_published_recently())
 
     def test_was_recently_published_with_future_question_returns_false(self):
-        date = timezone.now() + dt.timedelta(days=30)
+        date = timezone.now() + dt.timedelta(days=5)
         future_question = Question(pub_date=date)
         self.assertFalse(future_question.was_published_recently())
 
@@ -43,15 +43,15 @@ class IndexViewTests(TestCase):
         self.assertQuerySetEqual(response.context["latest_questions"], [])
 
     def test_past_question(self):
-        question = create_question(text="Past question.", days=-30)
+        past_question = create_question(text="Past question.", days=-5)
         response = self.client.get(reverse("polls:index"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Past question.")
-        self.assertQuerySetEqual(response.context["latest_questions"], [question])
+        self.assertContains(response, past_question.question_text)
+        self.assertQuerySetEqual(response.context["latest_questions"], [past_question])
 
     def test_future_question(self):
-        create_question(text="Future question.", days=30)
+        create_question(text="Future question.", days=5)
         response = self.client.get(reverse("polls:index"))
 
         self.assertEqual(response.status_code, 200)
@@ -59,20 +59,35 @@ class IndexViewTests(TestCase):
         self.assertQuerySetEqual(response.context["latest_questions"], [])
 
     def test_future_question_and_past_question(self):
-        past_question = create_question(text="Past question.", days=-30)
-        create_question(text="Future question.", days=30)
+        past_question = create_question(text="Past question.", days=-5)
+        create_question(text="Future question.", days=5)
         response = self.client.get(reverse("polls:index"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Past question.")
+        self.assertContains(response, past_question.question_text)
         self.assertQuerySetEqual(response.context["latest_questions"], [past_question])
 
     def test_two_past_questions(self):
-        question1 = create_question(text="Past question 1.", days=-5)
-        question2 = create_question(text="Past question 2.", days=-30)
+        past_question1 = create_question(text="Past question 1.", days=-5)
+        past_question2 = create_question(text="Past question 2.", days=-30)
         response = self.client.get(reverse("polls:index"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Past question 1.")
-        self.assertContains(response, "Past question 2.")
-        self.assertQuerySetEqual(response.context["latest_questions"], [question1, question2])
+        self.assertContains(response, past_question1.question_text)
+        self.assertContains(response, past_question2.question_text)
+        self.assertQuerySetEqual(response.context["latest_questions"], [past_question1, past_question2])
+
+
+class DetailViewTexts(TestCase):
+    def test_past_question(self):
+        past_question = create_question(text="Past question.", days=-5)
+        response = self.client.get(reverse("polls:detail", args=(past_question.id,)))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, past_question.question_text)
+
+    def test_future_question(self):
+        future_question = create_question(text="Past question.", days=5)
+        response = self.client.get(reverse("polls:detail", args=(future_question.id,)))
+
+        self.assertEqual(response.status_code, 404)
