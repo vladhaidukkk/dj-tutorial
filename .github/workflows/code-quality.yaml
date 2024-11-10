@@ -19,7 +19,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Run Linter
-        run: uv run ruff check
+        run: just lint
 
   formatting:
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Check Formatting
-        run: uv run ruff format --check
+        run: just check-fmt
 
   tests:
     runs-on: ubuntu-latest

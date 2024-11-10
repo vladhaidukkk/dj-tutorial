@@ -28,13 +28,16 @@ migrate app="":
 
 # Code quality commands
 fmt:
-    ruff format
+    uv run ruff format
+
+check-fmt:
+    uv run ruff format --check
 
 lint:
-    ruff check
+    uv run ruff check
 
 fix:
-    ruff check --fix
+    uv run ruff check --fix
 
 # Code testing commands
 check app="":
@@ -44,16 +47,16 @@ test app="":
     cd ./{{project}} && uv run manage.py test {{app}}
 
 cov app="":
-    cd ./{{project}} && coverage run --source="." manage.py test {{app}}
+    cd ./{{project}} && uv run coverage run --source="." manage.py test {{app}}
 
 cov-report app="":
     just cov {{app}}
-    cd ./{{project}} && coverage report -m
+    cd ./{{project}} && uv run coverage report -m
 
 cov-xml app="":
     just cov {{app}}
-    cd ./{{project}} && coverage xml -m
+    cd ./{{project}} && uv run coverage xml -m
 
 cov-html app="":
     just cov {{app}}
-    cd ./{{project}} && coverage html -m
+    cd ./{{project}} && uv run coverage html -m
